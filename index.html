@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Koto Riyo Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;600;700&family=Cinzel:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #b48aff;
+      --primary-dark: #7c4dff;
+      --accent: #ff8acf;
+      --bg: #0d0b1a;
+      --bg2: #13102a;
+      --bg3: #1c1836;
+      --card: #1a1630;
+      --text: #f0ecff;
+      --text-muted: #9d94c0;
+      --border: rgba(180, 138, 255, 0.2);
+      --glow: rgba(180, 138, 255, 0.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Noto Sans Thai', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 3px; }
+
+    /* ─── NAVBAR ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 5%;
+      height: 64px;
+      background: rgba(13, 11, 26, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      font-weight: 600;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--primary); }
+
+    .nav-right {
+      display: flex; align-items: center; gap: 1rem;
+    }
+
+    .cart-btn {
+      position: relative;
+      background: none; border: 1px solid var(--border);
+      color: var(--text); padding: 0.4rem 0.9rem;
+      border-radius: 20px; cursor: pointer;
+      font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem;
+      transition: all 0.2s;
+    }
+
+    .cart-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .cart-count {
+      background: var(--accent);
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: 50%;
+      width: 18px; height: 18px;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 90vh;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 4rem 5%;
+    }
+
+    .hero-bg {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(124, 77, 255, 0.18) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(255, 138, 207, 0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 30% 30% at 80% 20%, rgba(180, 138, 255, 0.1) 0%, transparent 50%);
+    }
+
+    /* Floating particles */
+    .particles {
+      position: absolute; inset: 0; pointer-events: none;
+    }
+
+    .particle {
+      position: absolute;
+      width: 3px; height: 3px;
+      background: var(--primary);
+      border-radius: 50%;
+      opacity: 0.6;
+      animation: float linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(180, 138, 255, 0.15);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      padding: 0.35rem 1rem;
+      border-radius: 20px;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1.15;
+      background: linear-gradient(135deg, #fff 0%, var(--primary) 50%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-weight: 300;
+    }
+
+    .hero-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white; padding: 0.85rem 2.2rem;
+      border-radius: 30px; font-size: 1rem;
+      text-decoration: none; font-weight: 600;
+      box-shadow: 0 0 30px var(--glow);
+      transition: all 0.3s;
+    }
+
+    .hero-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 0 50px var(--glow);
+    }
+
+    /* ─── SECTION ─── */
+    section { padding: 5rem 5%; }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-label {
+      display: inline-block;
+      color: var(--primary);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      background: linear-gradient(135deg, var(--text), var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ─── PRODUCTS GRID ─── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .product-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--primary);
+      box-shadow: 0 12px 40px rgba(124, 77, 255, 0.25);
+    }
+
+    .product-img {
+      width: 100%;
+      aspect-ratio: 1;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 5rem;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg3);
+    }
+
+    .product-img img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .product-card:hover .product-img img {
+      transform: scale(1.06);
+    }
+
+    .product-img-bg {
+      position: absolute; inset: 0;
+      opacity: 0.08;
+    }
+
+    .product-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: var(--accent);
+      color: white; font-size: 0.65rem;
+      font-weight: 700; padding: 0.2rem 0.6rem;
+      border-radius: 10px; letter-spacing: 0.05em;
+      text-transform: uppercase;
+      z-index: 1;
+    }
+
+    .product-img-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(13,11,26,0.5) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .product-info {
+      padding: 1.2rem;
+    }
+
+    .product-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+      color: var(--text);
+    }
+
+    .product-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      line-height: 1.5;
+    }
+
+    .product-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .product-price {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .add-btn {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white; border: none;
+      padding: 0.5rem 1.1rem; border-radius: 20px;
+      font-size: 0.85rem; font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .add-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    .add-btn:active { transform: scale(0.97); }
+
+    /* ─── BANNER ─── */
+    .banner {
+      background: linear-gradient(135deg, rgba(124, 77, 255, 0.2), rgba(255, 138, 207, 0.15));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 3rem;
+      text-align: center;
+      margin: 2rem 5%;
+    }
+
+    .banner h2 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+      background: linear-gradient(135deg, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .banner p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .banner-btn {
+      display: inline-block;
+      background: none;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      padding: 0.7rem 1.8rem;
+      border-radius: 25px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .banner-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 3rem 5%;
+      display: flex; flex-wrap: wrap;
+      gap: 2rem; justify-content: space-between;
+    }
+
+    .footer-brand .nav-logo { font-size: 1.5rem; display: block; margin-bottom: 0.8rem; }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      max-width: 260px;
+      line-height: 1.6;
+    }
+
+    .footer-col h4 {
+      color: var(--text);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col li {
+      margin-bottom: 0.6rem;
+    }
+
+    .footer-col a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover { color: var(--primary); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 5% 1rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    /* ─── CART DRAWER ─── */
+    .cart-overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0, 0, 0, 0.6);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .cart-overlay.open { opacity: 1; pointer-events: all; }
+
+    .cart-drawer {
+      position: fixed; top: 0; right: 0; z-index: 201;
+      width: min(400px, 100vw);
+      height: 100vh;
+      background: var(--bg2);
+      border-left: 1px solid var(--border);
+      transform: translateX(100%);
+      transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      display: flex; flex-direction: column;
+    }
+
+    .cart-drawer.open { transform: translateX(0); }
+
+    .cart-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-header h3 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.1rem;
+      color: var(--text);
+    }
+
+    .close-btn {
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 1.4rem; line-height: 1;
+    }
+
+    .close-btn:hover { color: var(--text); }
+
+    .cart-items {
+      flex: 1; overflow-y: auto;
+      padding: 1rem 1.5rem;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 3rem 0;
+      font-size: 0.95rem;
+    }
+
+    .cart-item {
+      display: flex; gap: 1rem;
+      align-items: center;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-icon { font-size: 2.5rem; }
+
+    .cart-item-info { flex: 1; }
+
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .cart-item-price {
+      color: var(--primary);
+      font-size: 0.85rem;
+    }
+
+    .cart-item-remove {
+      background: none; border: none;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 1.1rem;
+    }
+
+    .cart-item-remove:hover { color: var(--accent); }
+
+    .cart-footer {
+      padding: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .cart-total {
+      display: flex; justify-content: space-between;
+      font-size: 1rem; font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .cart-total span:last-child { color: var(--primary); }
+
+    .checkout-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: white; border: none;
+      padding: 1rem; border-radius: 12px;
+      font-size: 1rem; font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .checkout-btn:hover {
+      box-shadow: 0 0 30px var(--glow);
+    }
+
+    /* ─── TOAST ─── */
+    .toast {
+      position: fixed; bottom: 2rem; left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--card);
+      border: 1px solid var(--primary);
+      color: var(--text);
+      padding: 0.8rem 1.5rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+      z-index: 300;
+      transition: transform 0.3s;
+      white-space: nowrap;
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.8; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .banner { padding: 2rem 1.5rem; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <span class="nav-logo">琴 Koto Riyo</span>
+    <ul class="nav-links">
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#new">New Arrivals</a></li>
+      <li><a href="#about">About</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="cart-btn" onclick="toggleCart()">
+        🛒 Cart
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="particles" id="particles"></div>
+    <div class="hero-content">
+      <span class="hero-badge">✦ Official Merchandise ✦</span>
+      <h1 class="hero-title">Koto Riyo<br/>Shop</h1>
+      <p class="hero-sub">Wear your support — แสดงความรักให้ Koto Riyo</p>
+      <a href="#shop" class="hero-cta">Shop Now ✦</a>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section id="shop">
+    <div class="section-header">
+      <span class="section-label">✦ Collection ✦</span>
+      <h2 class="section-title">Official Merchandise</h2>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+  </section>
+
+  <!-- BANNER -->
+  <div class="banner">
+    <h2>New Arrivals Coming Soon</h2>
+    <p>ติดตามสินค้าใหม่และ Limited Edition ได้ที่ Twitter / X ก่อนใคร</p>
+    <a href="#" class="banner-btn">ติดตาม @KotoRiyo</a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <span class="nav-logo">琴 Koto Riyo</span>
+      <p>Official merchandise store for Koto Riyo VTuber fans. All designs are original.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Shop</h4>
+      <ul>
+        <li><a href="#">All Products</a></li>
+        <li><a href="#">New Arrivals</a></li>
+        <li><a href="#">Limited Edition</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Info</h4>
+      <ul>
+        <li><a href="#">Shipping Policy</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">FAQ</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Follow</h4>
+      <ul>
+        <li><a href="#">Twitter / X</a></li>
+        <li><a href="#">YouTube</a></li>
+        <li><a href="#">Discord</a></li>
+      </ul>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    © 2026 Koto Riyo Shop · All rights reserved
+  </div>
+
+  <!-- CART DRAWER -->
+  <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+  <div class="cart-drawer" id="cartDrawer">
+    <div class="cart-header">
+      <h3>🛒 Cart</h3>
+      <button class="close-btn" onclick="toggleCart()">✕</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">ยังไม่มีสินค้าในตะกร้า</div>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <span id="cartTotal">฿0</span>
+      </div>
+      <button class="checkout-btn" onclick="goToCheckout()">
+        Checkout →
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // ─── PRODUCTS DATA (fallback ถ้ายังไม่ได้เชื่อม Google Sheets) ───
+    const FALLBACK_PRODUCTS = [
+      { id:1, name:"Koto Riyo Acrylic Stand", desc:"อะคริลิคสแตนด์ขนาด 10cm พร้อมฐาน", price:350, emoji:"🎴", image:"https://drive.google.com/file/d/121xTuv_1UFxEhxk3fG7xFWdGMilFJcHb/view?usp=sharing", bg:"linear-gradient(135deg,#b48aff22,#ff8acf22)", badge:"Best Seller" },
+      { id:2, name:"Holographic Sticker Set", desc:"สติ๊กเกอร์โฮโลกราฟิก 6 แผ่น", price:150, emoji:"✨", image:"", bg:"linear-gradient(135deg,#ff8acf22,#ffd70022)", badge:"New" },
+      { id:3, name:"Koto Riyo Pin Badge", desc:"เข็มกลัดโลหะเคลือบสี ขนาด 4cm", price:200, emoji:"📌", image:"", bg:"linear-gradient(135deg,#7c4dff22,#b48aff22)", badge:null },
+      { id:4, name:"Tapestry B2", desc:"ผ้าแขวนผนัง B2 พิมพ์คุณภาพสูง", price:750, emoji:"🖼️", image:"", bg:"linear-gradient(135deg,#4dffb422,#7c4dff22)", badge:"Limited" },
+      { id:5, name:"Washi Tape Set", desc:"วาชิเทปลายพิเศษ 3 ม้วน", price:180, emoji:"🎀", image:"", bg:"linear-gradient(135deg,#ff8acf22,#b48aff22)", badge:null },
+      { id:6, name:"Koto Riyo Tote Bag", desc:"กระเป๋าผ้า Canvas ลายพิมพ์คมชัด", price:450, emoji:"👜", image:"", bg:"linear-gradient(135deg,#ffd70022,#ff8acf22)", badge:"New" },
+    ];
+
+    let products = [...FALLBACK_PRODUCTS];
+
+    // ─── FETCH จาก GOOGLE SHEETS ───
+    const BG_COLORS = [
+      "linear-gradient(135deg,#b48aff22,#ff8acf22)",
+      "linear-gradient(135deg,#ff8acf22,#ffd70022)",
+      "linear-gradient(135deg,#7c4dff22,#b48aff22)",
+      "linear-gradient(135deg,#4dffb422,#7c4dff22)",
+      "linear-gradient(135deg,#ff8acf22,#b48aff22)",
+      "linear-gradient(135deg,#ffd70022,#ff8acf22)",
+    ];
+
+    async function fetchProducts() {
+      const apiUrl = localStorage.getItem('kotoriyo_api_url');
+      if (!apiUrl) return; // ยังไม่ได้ setup — ใช้ fallback
+
+      showLoadingGrid();
+      try {
+        const res = await fetch(apiUrl + '?action=products');
+        const data = await res.json();
+
+        if (Array.isArray(data) && data.length > 0) {
+          products = data.map((p, i) => ({
+            id:    p.id    || i + 1,
+            name:  p.name  || 'สินค้า',
+            desc:  p.desc  || '',
+            price: Number(p.price) || 0,
+            emoji: p.emoji || '🎁',
+            image: p.image || '',
+            bg:    p.bg    || BG_COLORS[i % BG_COLORS.length],
+            badge: p.badge || null,
+          }));
+          renderProducts();
+          showToast(`✅ โหลด ${products.length} สินค้าจาก Google Sheets`);
+        } else if (data.error) {
+          renderProducts(); // fallback
+        }
+      } catch (err) {
+        renderProducts(); // fallback silently
+      }
+    }
+
+    function showLoadingGrid() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = Array(6).fill(0).map(() => `
+        <div class="product-card" style="pointer-events:none">
+          <div class="product-img" style="background:var(--bg3)">
+            <div style="width:60px;height:60px;border-radius:50%;background:var(--bg2);animation:pulse 1.5s infinite"></div>
+          </div>
+          <div class="product-info">
+            <div style="height:14px;background:var(--bg2);border-radius:6px;margin-bottom:8px;animation:pulse 1.5s infinite"></div>
+            <div style="height:10px;background:var(--bg2);border-radius:6px;width:70%;animation:pulse 1.5s infinite"></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ─── CART STATE ───
+    let cart = [];
+
+    // ─── แปลง Google Drive URL ทุก format → direct image URL ───
+    function normalizeImageUrl(url) {
+      if (!url || !url.toString().trim()) return '';
+      const str = url.toString().trim();
+      // รองรับทุก format ของ Google Drive
+      const match = str.match(/(?:drive\.google\.com\/(?:file\/d\/|uc\?.*?id=)|id=)([a-zA-Z0-9_-]{20,})/);
+      if (match) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      return str; // URL อื่นๆ ใช้ตรงๆ
+    }
+
+    // ─── RENDER PRODUCTS ───
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = products.map(p => {
+        const imageUrl = normalizeImageUrl(p.image);
+        const hasImage = imageUrl !== '';
+        const imgContent = hasImage
+          ? `<img src="${imageUrl}" alt="${p.name}" loading="lazy"
+               onerror="this.parentElement.innerHTML='<span style=\\'font-size:5rem\\'>${p.emoji || '🎁'}</span>'">`
+          : `<span>${p.emoji || '🎁'}</span>`;
+
+        return `
+        <div class="product-card">
+          <div class="product-img" style="background:${hasImage ? 'var(--bg3)' : p.bg}">
+            ${!hasImage ? `<div class="product-img-bg" style="background:${p.bg}"></div>` : ''}
+            ${imgContent}
+            ${hasImage ? '<div class="product-img-overlay"></div>' : ''}
+            ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+          </div>
+          <div class="product-info">
+            <div class="product-name">${p.name}</div>
+            <div class="product-desc">${p.desc}</div>
+            <div class="product-footer">
+              <span class="product-price">฿${Number(p.price).toLocaleString()}</span>
+              <button class="add-btn" onclick="addToCart(${p.id})">+ Add</button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // ─── CART LOGIC ───
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      const existing = cart.find(i => i.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateCart();
+      showToast(`${product.emoji} ${product.name} added to cart!`);
+    }
+
+    function removeFromCart(id) {
+      cart = cart.filter(i => i.id !== id);
+      updateCart();
+    }
+
+    function updateCart() {
+      const count = cart.reduce((s, i) => s + i.qty, 0);
+      const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+      document.getElementById('cartCount').textContent = count;
+      document.getElementById('cartTotal').textContent = `฿${total.toLocaleString()}`;
+
+      const itemsEl = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '<div class="cart-empty">ยังไม่มีสินค้าในตะกร้า</div>';
+      } else {
+        itemsEl.innerHTML = cart.map(i => `
+          <div class="cart-item">
+            <span class="cart-item-icon">${i.emoji}</span>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${i.name} ${i.qty > 1 ? `×${i.qty}` : ''}</div>
+              <div class="cart-item-price">฿${(i.price * i.qty).toLocaleString()}</div>
+            </div>
+            <button class="cart-item-remove" onclick="removeFromCart(${i.id})">✕</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function toggleCart() {
+      document.getElementById('cartDrawer').classList.toggle('open');
+      document.getElementById('cartOverlay').classList.toggle('open');
+    }
+
+    // ─── TOAST ───
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2500);
+    }
+
+    // ─── PARTICLES ───
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 25; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 100 + '%';
+        p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+        p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+        p.style.animationDelay = (Math.random() * 15) + 's';
+        p.style.opacity = Math.random() * 0.6 + 0.2;
+        container.appendChild(p);
+      }
+    }
+
+    // ─── GO TO CHECKOUT ───
+    function goToCheckout() {
+      if (cart.length === 0) {
+        showToast('กรุณาเพิ่มสินค้าก่อนนะคะ 🛒');
+        return;
+      }
+      localStorage.setItem('kotoriyo_cart', JSON.stringify(cart));
+      window.location.href = 'checkout.html';
+    }
+
+    // ─── INIT ───
+    fetchProducts().then(() => {
+      if (products === FALLBACK_PRODUCTS || products.length === 0) {
+        products = [...FALLBACK_PRODUCTS];
+        renderProducts();
+      }
+    });
+    createParticles();
+  </script>
+</body>
+</html>
