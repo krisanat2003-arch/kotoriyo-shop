@@ -1,4 +1,5 @@
 {
+  // Trigger Workers Builds for the japan-trip worker.
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "japan-trip",
   "compatibility_date": "2026-05-09",
